@@ -30,7 +30,9 @@
     "webpack-glob-entries": "^1.0.1"
   },
   "scripts": {
-    "start": "webpack",
+    "build": "webpack",
+    "prestart": "yarn build",
+    "start": "scripts/start_test.sh",
     "lint": "eslint \"tests/**/*.ts\" --fix"
   }
 }
