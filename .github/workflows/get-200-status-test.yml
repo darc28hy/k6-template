@@ -1,9 +1,9 @@
 name: get-200-status-test
 
 on:
-  push:
-    branches:
-      - main
+  schedule:
+    # Every Sunday at 15:00 (UTC, JST: 0:00)
+    - cron: '0 15 * * 0'
 
 jobs:
   call-testing-workflow:
