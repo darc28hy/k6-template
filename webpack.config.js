@@ -1,7 +1,7 @@
-const path = require('path');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
-const GlobEntries = require('webpack-glob-entries');
+const path = require('path')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const CopyPlugin = require('copy-webpack-plugin')
+const GlobEntries = require('webpack-glob-entries')
 
 module.exports = {
   mode: 'production',
@@ -26,7 +26,7 @@ module.exports = {
   target: 'web',
   externals: /^(k6|https?\:\/\/)(\/.*)?/,
   // Generate map files for compiled scripts
-  devtool: "source-map",
+  devtool: 'source-map',
   stats: {
     colors: true,
   },
@@ -35,14 +35,16 @@ module.exports = {
     // Copy assets to the destination folder
     // see `src/post-file-test.ts` for an test example using an asset
     new CopyPlugin({
-      patterns: [{ 
-        from: path.resolve(__dirname, 'assets'), 
-        noErrorOnMissing: true 
-      }],
+      patterns: [
+        {
+          from: path.resolve(__dirname, 'assets'),
+          noErrorOnMissing: true,
+        },
+      ],
     }),
   ],
   optimization: {
     // Don't minimize, as it's not used in the browser
     minimize: false,
   },
-};
+}
