@@ -1,0 +1,8 @@
+{
+	"editor.codeActionsOnSave": {
+		"source.fixAll": true,
+  },
+  "files.trimTrailingWhitespace": true,
+  "files.trimFinalNewlines": true,
+  "editor.insertSpaces": true
+}
