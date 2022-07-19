@@ -70,8 +70,8 @@ k6 run ./dist/tests/get-200-status-test.js
 ## Writing own tests
 
 House rules for writing tests:
-- The test code is located in `tests` folder
-- If static files are required then add them to `./assets` folder. Its content gets copied to the destination folder (`dist`) along with compiled scripts.
+- The test code is located in `./tests` folder
+- If static files are required then add them to `./assets` folder. Its content gets copied to the destination folder (`./dist`) along with compiled scripts.
 
 ### Transpiling and Bundling
 
