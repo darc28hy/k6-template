@@ -1,0 +1,13 @@
+name: get-200-status-test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  call-testing-workflow:
+    name: Call Testing Workflow
+    uses: ./.github/workflows/_common_testing_workflow.yml
+    with:
+      testfilename: get-200-status-test

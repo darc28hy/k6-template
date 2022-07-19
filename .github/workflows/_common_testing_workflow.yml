@@ -1,0 +1,87 @@
+name: Common testing workflow
+
+on:
+  workflow_call:
+    inputs:
+      testfilename:
+        description: テスト対象の拡張子を除くファイル名
+        type: string
+        required: true
+
+env:
+  testfilename: ${{ inputs.testfilename }}
+
+jobs:
+  load_test:
+    name: Load Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Use Node.js 16.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16.x
+
+      - name: Build
+        run: |
+          yarn --frozen-lockfile
+          yarn build
+
+      - name: Run local k6 test
+        uses: grafana/k6-action@v0.2.0
+        with:
+          filename: ./dist/tests/${{ env.testfilename }}.js
+          flags: --out csv=${{ env.testfilename }}.csv
+
+      - name: Preparing for Write Job Summary
+        run: |
+          yarn add html-minifier
+
+      - name: Write Job Summary
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { readFileSync } = require('fs')
+            const { minify } = require(`${process.env.GITHUB_WORKSPACE}/node_modules/html-minifier`)
+
+            const contentChecks = readFileSync(`./${process.env.testfilename}_checks.html`, 'utf8')
+            const contentMetricsBuiltin = readFileSync(`./${process.env.testfilename}_metrics_builtin.html`, 'utf8')
+            const contentMetricsCustom = readFileSync(`./${process.env.testfilename}_metrics_custom.html`, 'utf8')
+
+            // Markdown内にレンダリングしたHTMLが正しく認識されるようにminify化
+            const minifyContent = (content) => {
+              const minified = minify(content, {
+                caseSensitive: true,
+                collapseInlineTagWhitespace: true,
+                collapseWhitespace: true,
+                keepClosingSlash: true,
+                minifyCSS: true,
+                minifyJS: true,
+                preserveLineBreaks: true,
+                processConditionalComments: true,
+                removeComments: true,
+                removeEmptyAttributes: true,
+                removeRedundantAttributes: true
+              })
+              return minified.replace(/\n/g, '')
+            }
+
+            await core.summary
+              .addHeading(process.env.testfilename)
+              .addHeading('Checks', 3)
+              .addRaw(minifyContent(contentChecks))
+              .addHeading('Metrics (Built-In)', 3)
+              .addRaw(minifyContent(contentMetricsBuiltin))
+              .addHeading('Metrics (Custom)', 3)
+              .addRaw(minifyContent(contentMetricsCustom))
+              .write()
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: test_results
+          path: |
+            ${{ env.testfilename }}.*
