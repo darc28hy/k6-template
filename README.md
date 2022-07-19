@@ -1,10 +1,8 @@
 <div align="center">
-  
-  ![banner](docs/ts-js-k6.png)
 
-# Template to use TypeScript with k6
+  <img src="docs/ts-js-k6.png" alt="banner" style="max-width: 30%;">
 
-![.github/workflows/push.yml](https://github.com/k6io/template-typescript/workflows/.github/workflows/push.yml/badge.svg?branch=master)
+  # Template to use TypeScript with k6
 
 </div>
 
@@ -23,15 +21,16 @@ While it, of course, still is possible to shoot yourself in the foot with TypeSc
 
 ## Prerequisites
 
-- [k6](https://k6.io/docs/getting-started/installation)
 - [NodeJS](https://nodejs.org/en/download/)
+- [Docker CLI](https://docs.docker.com/get-docker)
+- [k6](https://k6.io/docs/getting-started/installation) (optional)
 - [Yarn](https://yarnpkg.com/getting-started/install) (optional)
 
 ## Installation
 
-**Creating a project from the `template-typescript` template**
+**Creating a project from the `k6-typescript-template` template**
 
-To generate a TypeScript project that includes the dependencies and initial configuration, navigate to the [template-typescript](https://github.com/k6io/template-typescript) page and click **Use this template**.
+To generate a TypeScript project that includes the dependencies and initial configuration, navigate to the [k6-typescript-template](https://github.com/darc28hy/k6-typescript-template) page and click **Use this template**.
 
   ![](docs/use-this-template-button.png)
 
@@ -41,7 +40,7 @@ To generate a TypeScript project that includes the dependencies and initial conf
 Clone the generated repository on your local machine, move to the project root folder and install the dependencies defined in [`package.json`](./package.json)
 
 ```bash
-$ yarn install
+yarn
 ```
 
 ## Running the test
@@ -49,22 +48,29 @@ $ yarn install
 To run a test written in TypeScript, we first have to transpile the TypeScript code into JavaScript and bundle the project
 
 ```bash
-$ yarn webpack
+yarn build
 ```
 
-This command creates the final test files to the `./dist` folder.
+This command creates the final test files to the `./dist/tests` folder.
 
-Once that is done, we can run our script the same way we usually do, for instance:
+Once that is done, we can run `yarn start`, for instance:
 
 ```bash
-$ k6 run dist/get-200-status-test.js
+yarn start get-200-status-test
+```
+
+Docker must be installed to use this command.
+
+Alternatively, you can run the script in the same way as usual, for instance:
+
+```bash
+k6 run ./dist/tests/get-200-status-test.js
 ```
 
 ## Writing own tests
 
 House rules for writing tests:
-- The test code is located in `src` folder
-- The entry points for the tests need to have "_test_" word in the name to distinguish them from auxiliary files. You can change the entry [here](./webpack.config.js#L8). 
+- The test code is located in `tests` folder
 - If static files are required then add them to `./assets` folder. Its content gets copied to the destination folder (`dist`) along with compiled scripts.
 
 ### Transpiling and Bundling
