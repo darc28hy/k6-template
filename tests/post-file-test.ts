@@ -2,7 +2,7 @@ import { sleep, check } from 'k6'
 import http, { StructuredRequestBody } from 'k6/http'
 import { Options } from 'k6/options'
 
-const binFile = open('test.png', 'b')
+const binFile = open('../assets/test.png', 'b')
 const url = `https://httpbin.org/post`
 
 export const options: Options = {

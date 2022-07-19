@@ -1,15 +1,24 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const CopyPlugin = require('copy-webpack-plugin')
-const GlobEntries = require('webpack-glob-entries')
+const glob = require('glob')
+
+const sourceDirs = ['tests', 'lib']
 
 module.exports = {
   mode: 'production',
-  entry: GlobEntries('./src/*test*.ts'), // Generates multiple entry for each test
+  entry: [{}]
+    .concat(
+      glob.sync(`./+(${sourceDirs.join('|')})/**/*.ts`).map((file) => {
+        return { [file.replace(path.extname(file), '.js')]: file }
+      }),
+    )
+    .reduce((x, y) => Object.assign(x, y), {}),
   output: {
     path: path.join(__dirname, 'dist'),
+    filename: '[name]',
     libraryTarget: 'commonjs',
-    filename: '[name].js',
   },
   resolve: {
     extensions: ['.ts', '.js'],
@@ -25,19 +34,17 @@ module.exports = {
   },
   target: 'web',
   externals: /^(k6|https?\:\/\/)(\/.*)?/,
-  // Generate map files for compiled scripts
-  devtool: 'source-map',
   stats: {
     colors: true,
   },
   plugins: [
     new CleanWebpackPlugin(),
     // Copy assets to the destination folder
-    // see `src/post-file-test.ts` for an test example using an asset
     new CopyPlugin({
       patterns: [
         {
           from: path.resolve(__dirname, 'assets'),
+          to: path.resolve(__dirname, 'dist/assets'),
           noErrorOnMissing: true,
         },
       ],
