@@ -1,4 +1,4 @@
-name: get-200-status-test
+name: post-400-status-test
 
 on:
   # schedule trigger
@@ -11,4 +11,4 @@ jobs:
     name: Call Testing Workflow
     uses: ./.github/workflows/_common_testing_workflow.yml
     with:
-      testfilename: get-200-status-test
+      testfilename: post-400-status-test

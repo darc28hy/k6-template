@@ -9,17 +9,6 @@ on:
         type: string
         required: true
 
-  # manual trigger
-  workflow_dispatch:
-    inputs:
-      testfilename:
-        type: choice
-        description: テストファイル
-        options:
-        - get-200-status-test
-        - post-400-status-test
-        - post-file-test
-
 env:
   testfilename: ${{ inputs.testfilename }}
 
